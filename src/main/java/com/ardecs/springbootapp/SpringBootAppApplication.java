@@ -18,6 +18,6 @@ public class SpringBootAppApplication {
 		SpringApplication.run(SpringBootAppApplication.class, args);
         ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
         SimpleBean simpleBean = context.getBean(SimpleBean.class);
-        logger.info(simpleBean.helloWorld());
+       logger.info(simpleBean.helloWorld());
 	}
 }

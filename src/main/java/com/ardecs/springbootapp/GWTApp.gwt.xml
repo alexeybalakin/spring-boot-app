@@ -1,9 +1,12 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.8.0//EN"
         "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
-<module>
+<module rename-to="gwtApp">
 
     <inherits name='com.google.gwt.user.User'/>
 
     <entry-point class='com.ardecs.springbootapp.client.GWTApp'/>
+
+    <source path="entities"/>
+    <source path="client"/>
 
 </module>

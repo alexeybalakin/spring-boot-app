@@ -2,11 +2,12 @@ package com.ardecs.springbootapp.entities;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
@@ -16,6 +17,9 @@ public class User {
     @OneToMany
     @JoinColumn(name = "user_id")
     private List<Document> documents;
+
+    public User() {
+    }
 
     public User(String login, String password, String name) {
         this.login = login;

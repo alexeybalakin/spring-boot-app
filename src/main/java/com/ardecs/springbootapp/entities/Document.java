@@ -1,12 +1,13 @@
 package com.ardecs.springbootapp.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "docs")
-public class Document {
+public class Document implements Serializable {
     @Id @GeneratedValue
     private Long id;
     private Date data;

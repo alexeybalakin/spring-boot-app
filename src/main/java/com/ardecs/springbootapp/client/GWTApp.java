@@ -1,7 +1,6 @@
 package com.ardecs.springbootapp.client;
 
 import com.ardecs.springbootapp.entities.User;
-import com.google.gwt.aria.client.AlertdialogRole;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

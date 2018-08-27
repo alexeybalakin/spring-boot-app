@@ -16,16 +16,16 @@ import java.util.List;
 
 public class GWTApp implements EntryPoint {
 
-    private  UserServiceAsync userService = GWT.create(UserService.class);
+    private UserServiceAsync userService = GWT.create(UserService.class);
 
-    private ListDataProvider<User> createTable (CellTable<User> table){
-        TextColumn<User> idColumn =new TextColumn<User>() {
+    private ListDataProvider<User> createTable(CellTable<User> table) {
+        TextColumn<User> idColumn = new TextColumn<User>() {
             @Override
             public String getValue(User object) {
                 return object.getId().toString();
             }
         };
-        TextColumn<User> loginColumn =new TextColumn<User>() {
+        TextColumn<User> loginColumn = new TextColumn<User>() {
             @Override
             public String getValue(User object) {
                 return object.getLogin();
@@ -59,7 +59,17 @@ public class GWTApp implements EntryPoint {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.alert("World!");
+                userService.testMethod(new AsyncCallback<String>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Window.alert("Error: " + caught.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        Window.alert(s);
+                    }
+                });
             }
         });
         RootPanel.get().add(button);

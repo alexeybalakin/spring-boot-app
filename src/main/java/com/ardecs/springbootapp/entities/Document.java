@@ -1,5 +1,7 @@
 package com.ardecs.springbootapp.entities;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -7,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "docs")
-public class Document implements Serializable {
+public class Document implements IsSerializable {
     @Id @GeneratedValue
     private Long id;
     private Date data;

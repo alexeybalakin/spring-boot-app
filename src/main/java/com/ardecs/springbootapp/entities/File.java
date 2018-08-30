@@ -1,5 +1,7 @@
 package com.ardecs.springbootapp.entities;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,7 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "files")
-public class File implements Serializable {
+public class File implements IsSerializable {
     @Id @GeneratedValue
     private Long id;
     private String name;

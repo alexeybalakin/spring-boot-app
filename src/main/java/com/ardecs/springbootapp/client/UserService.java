@@ -11,5 +11,10 @@ public interface UserService extends RemoteService {
 
     List<User> list();
 
+    void delete(User user);
+
+    User save(User user);
+
     String testMethod();
+
 }

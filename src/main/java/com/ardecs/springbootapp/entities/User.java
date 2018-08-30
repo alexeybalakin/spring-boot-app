@@ -1,22 +1,23 @@
 package com.ardecs.springbootapp.entities;
 
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements IsSerializable {
     @Id
     @GeneratedValue
     private Long id;
     private String login;
     private String password;
     private String name;
-    @OneToMany
-    @JoinColumn(name = "user_id")
-    private List<Document> documents;
+//    @OneToMany
+//    @JoinColumn(name = "user_id")
+//    private List<Document> documents;
 
     public User() {
     }
@@ -25,6 +26,12 @@ public class User implements Serializable {
         this.login = login;
         this.password = password;
         this.name = name;
+    }
+
+    public User(Long id, String login, String password) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
     }
 
     public Long getId() {
@@ -59,11 +66,11 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public List<Document> getDocuments() {
-        return documents;
-    }
-
-    public void setDocuments(List<Document> documents) {
-        this.documents = documents;
-    }
+//    public List<Document> getDocuments() {
+//        return documents;
+//    }
+//
+//    public void setDocuments(List<Document> documents) {
+//        this.documents = documents;
+//    }
 }

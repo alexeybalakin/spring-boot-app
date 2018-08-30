@@ -74,6 +74,7 @@ public class GWTApp implements EntryPoint {
             public void onClick(ClickEvent clickEvent) {
                 login.setValue("");
                 password.setValue("");
+                name.setValue("");
                 id = -1L;
                 dialog.center();
                 dialog.show();
@@ -107,7 +108,7 @@ public class GWTApp implements EntryPoint {
                 password.setValue(user.getPassword());
                 name.setValue(user.getName());
                 id = user.getId();
-                Window.alert("id= " + id);
+                //Window.alert("id= " + id);
                 dialog.center();
                 dialog.show();
             }
@@ -153,8 +154,8 @@ public class GWTApp implements EntryPoint {
         HorizontalPanel dcontrol = new HorizontalPanel();
         dcontrol.add(new Button("Сохранить", new ClickHandler() {
             public void onClick(ClickEvent event) {
-                User newUser = new User(id.longValue(), login.getValue(), password.getValue());
-                Window.alert(" user.id= " + newUser.getId() + " user.login = " + newUser.getLogin() + " pass = " + newUser.getPassword());
+                User newUser = new User(id, login.getValue(), password.getValue(), name.getValue());
+                //Window.alert(" user.id= " + newUser.getId() + " user.login = " + newUser.getLogin() + " pass = " + newUser.getPassword());
 
                 userService.save(newUser, new AsyncCallback<User>() {
                     @Override

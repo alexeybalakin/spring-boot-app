@@ -10,7 +10,8 @@ import java.io.Serializable;
 @Table(name = "users")
 public class User implements IsSerializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator="UserSeq")
+    @SequenceGenerator(name="UserSeq",sequenceName="USER_SEQ")
     private Long id;
     private String login;
     private String password;
@@ -22,16 +23,17 @@ public class User implements IsSerializable {
     public User() {
     }
 
-    public User(String login, String password, String name) {
+    public User(Long id, String login, String password, String name) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.name = name;
     }
 
-    public User(Long id, String login, String password) {
-        this.id = id;
+    public User(String login, String password, String name) {
         this.login = login;
         this.password = password;
+        this.name = name;
     }
 
     public Long getId() {

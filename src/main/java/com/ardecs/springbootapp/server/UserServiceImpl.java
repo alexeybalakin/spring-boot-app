@@ -5,13 +5,13 @@ import java.util.List;
 import com.ardecs.springbootapp.client.UserService;
 import com.ardecs.springbootapp.entities.User;
 import com.ardecs.springbootapp.repositories.UserRepository;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.ardecs.springbootapp.server.util.ExtRemoteServiceServlet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl extends RemoteServiceServlet implements UserService {
+public class UserServiceImpl extends ExtRemoteServiceServlet implements UserService {
 
 
     @Autowired
@@ -22,7 +22,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
         return repository.findAll();
     }
 
-    public String testMethod(){
+    public String testMethod() {
         return "Hello, user!";
     }
 

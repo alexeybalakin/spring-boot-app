@@ -1,13 +1,14 @@
 package com.ardecs.springbootapp.entities;
 
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
+import javax.persistence.*;
+
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements IsSerializable {
     @Id
     @GeneratedValue
     private Long id;

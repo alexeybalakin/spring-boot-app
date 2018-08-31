@@ -6,7 +6,6 @@ import com.ardecs.springbootapp.client.UserService;
 import com.ardecs.springbootapp.entities.User;
 import com.ardecs.springbootapp.repositories.UserRepository;
 import com.ardecs.springbootapp.server.util.ExtRemoteServiceServlet;
-import com.google.gwt.core.shared.GwtIncompatible;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

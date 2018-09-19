@@ -1,4 +1,4 @@
-package com.ardecs.springbootapp.server;
+package com.ardecs.springbootapp.server.services;
 
 import java.util.List;
 
@@ -36,10 +36,6 @@ public class UserServiceImpl extends ExtRemoteServiceServlet implements UserServ
         repository.save(user);
         data.setId(user.getId());
         return data;
-    }
-
-    public String testMethod(){
-        return "Hello, user!";
     }
 
 }

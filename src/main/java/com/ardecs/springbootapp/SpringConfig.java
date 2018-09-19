@@ -1,15 +1,10 @@
 package com.ardecs.springbootapp;
 
-import com.ardecs.springbootapp.server.UserServiceImpl;
+import com.ardecs.springbootapp.server.services.UserServiceImpl;
 
-import oracle.jdbc.pool.OracleDataSource;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.sql.DataSource;
-import java.sql.SQLException;
 
 @Configuration
 public class SpringConfig {

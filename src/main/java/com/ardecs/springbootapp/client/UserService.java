@@ -15,6 +15,4 @@ public interface UserService extends RemoteService {
 
     User save(User user);
 
-    String testMethod();
-
 }

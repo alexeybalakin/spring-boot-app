@@ -43,9 +43,9 @@ public class GWTApp implements EntryPoint {
                 return user.getName();
             }
         };
-        table.addColumn(loginColumn, "Login");
-        table.addColumn(passwordColumn, "Password");
-        table.addColumn(nameColumn, "Name");
+        table.addColumn(loginColumn, "Логин");
+        table.addColumn(passwordColumn, "Пароль");
+        table.addColumn(nameColumn, "Имя");
         ListDataProvider<User> dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(table);
         this.userService.list(new AsyncCallback<List<User>>() {
@@ -131,21 +131,21 @@ public class GWTApp implements EntryPoint {
         VerticalPanel dpanel = new VerticalPanel();
 
         HorizontalPanel loginPanel = new HorizontalPanel();
-        Label labelLogin = new Label("Login");
+        Label labelLogin = new Label("Логин");
         labelLogin.setWidth("100px");
         loginPanel.add(labelLogin);
         loginPanel.add(login);
         dpanel.add(loginPanel);
 
         HorizontalPanel pasPanel = new HorizontalPanel();
-        Label labelPas = new Label("Password");
+        Label labelPas = new Label("Пароль");
         labelPas.setWidth("100px");
         pasPanel.add(labelPas);
         pasPanel.add(password);
         dpanel.add(pasPanel);
 
         HorizontalPanel namePanel = new HorizontalPanel();
-        Label labelName = new Label("Name");
+        Label labelName = new Label("Имя");
         labelName.setWidth("100px");
         namePanel.add(labelName);
         namePanel.add(name);

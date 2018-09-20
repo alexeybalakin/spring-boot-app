@@ -14,6 +14,8 @@ public class Document implements Serializable {
     private Date data;
     private String title;
     private String description;
+
+    private int user_id;
 //    @OneToMany
 //    @JoinColumn(name = "doc_id")
 //    private List<File> files;
@@ -48,6 +50,14 @@ public class Document implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
 //    public List<File> getFiles() {

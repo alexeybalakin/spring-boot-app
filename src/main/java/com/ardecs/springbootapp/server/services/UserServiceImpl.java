@@ -21,6 +21,11 @@ public class UserServiceImpl extends ExtRemoteServiceServlet implements UserServ
     }
 
     @Override
+    public User getUserById(int id) {
+        return repository.getOne(new Long(id));
+    }
+
+    @Override
     public void delete(User user) {
         repository.delete(user.getId());
     }

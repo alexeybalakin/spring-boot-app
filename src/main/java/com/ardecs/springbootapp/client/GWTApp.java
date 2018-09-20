@@ -21,8 +21,6 @@ public class GWTApp implements EntryPoint {
     private UserServiceAsync userService = GWT.create(UserService.class);
     private DocServiceAsync docService = GWT.create(DocService.class);
 
-
-
     private final TextBox login = new TextBox();
     private final TextBox password = new TextBox();
     private final TextBox name = new TextBox();
@@ -159,9 +157,16 @@ public class GWTApp implements EntryPoint {
                 return doc.getData().toString();
             }
         };
+        TextColumn<Document> userColumn = new TextColumn<Document>() {
+            @Override
+            public String getValue(Document doc) {
+                return doc.getUser_id() + "";
+            }
+        };
         table.addColumn(titleColumn, "Заголовок");
         table.addColumn(descriptionColumn, "Описание");
         table.addColumn(dateColumn, "Дата");
+        table.addColumn(userColumn, "Владелец(user_id)");
         ListDataProvider<Document> dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(table);
         this.docService.list(new AsyncCallback<List<Document>>() {
@@ -216,7 +221,6 @@ public class GWTApp implements EntryPoint {
                         GWT.log("error", throwable);
                         Window.alert("Save error! ");
                     }
-
                     @Override
                     public void onSuccess(User user) {
                         if (id != -1) {

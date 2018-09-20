@@ -1,5 +1,6 @@
 package com.ardecs.springbootapp;
 
+import com.ardecs.springbootapp.server.services.DocServiceImpl;
 import com.ardecs.springbootapp.server.services.UserServiceImpl;
 
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -34,7 +35,15 @@ public class SpringConfig {
                 userService, "/gwtApp/gwt.user_service/*");
         registrationBean.setServlet(userService);
         registrationBean.setLoadOnStartup(1);
+        return registrationBean;
+    }
 
+    @Bean
+    ServletRegistrationBean docServiceRegistration(DocServiceImpl docService) {
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean(
+                docService, "/gwtApp/gwt.doc_service/*");
+        registrationBean.setServlet(docService);
+        registrationBean.setLoadOnStartup(1);
         return registrationBean;
     }
 

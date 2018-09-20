@@ -14,9 +14,9 @@ public class Document implements Serializable {
     private Date data;
     private String title;
     private String description;
-    @OneToMany
-    @JoinColumn(name = "doc_id")
-    private List<File> files;
+//    @OneToMany
+//    @JoinColumn(name = "doc_id")
+//    private List<File> files;
 
     public Long getId() {
         return id;
@@ -50,11 +50,11 @@ public class Document implements Serializable {
         this.description = description;
     }
 
-    public List<File> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<File> files) {
-        this.files = files;
-    }
+//    public List<File> getFiles() {
+//        return files;
+//    }
+//
+//    public void setFiles(List<File> files) {
+//        this.files = files;
+//    }
 }

@@ -1,8 +1,10 @@
 package com.ardecs.springbootapp.client;
 
+import com.ardecs.springbootapp.entities.Document;
 import com.ardecs.springbootapp.entities.User;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -17,14 +19,91 @@ import java.util.List;
 public class GWTApp implements EntryPoint {
 
     private UserServiceAsync userService = GWT.create(UserService.class);
+    private DocServiceAsync docService = GWT.create(DocService.class);
+
+
 
     private final TextBox login = new TextBox();
     private final TextBox password = new TextBox();
     private final TextBox name = new TextBox();
 
+    private TabLayoutPanel content = new TabLayoutPanel(20, Style.Unit.PX);;
+
     private Long id = -1L;
 
-    private ListDataProvider<User> createTable(CellTable<User> table) {
+    public void onModuleLoad() {
+
+        //создаем таблицу юзеров и добавляем на первую вкладку
+        CellTable<User> userTable = new CellTable<>();
+        ListDataProvider<User> dataProvider = createUserTable(userTable);
+        DialogBox dialog = editDialog(dataProvider);
+        Button add = new Button("Добавить", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                login.setValue("");
+                password.setValue("");
+                name.setValue("");
+                id = -1L;
+                dialog.center();
+                dialog.show();
+            }
+        });
+
+        Button delete = new Button("Удалить", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                final int index = userTable.getKeyboardSelectedRow();
+                User user = dataProvider.getList().get(index);
+                userService.delete(user, new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        GWT.log("error", throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(Void v) {
+                        dataProvider.getList().remove(index);
+                    }
+                });
+            }
+        });
+
+        Button edit = new Button("Редактировать", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                User user = dataProvider.getList().get(userTable.getKeyboardSelectedRow());
+                login.setValue(user.getLogin());
+                password.setValue(user.getPassword());
+                name.setValue(user.getName());
+                id = user.getId();
+                //Window.alert("id= " + id);
+                dialog.center();
+                dialog.show();
+            }
+        });
+
+        HorizontalPanel control = new HorizontalPanel();
+        control.add(add);
+        control.add(edit);
+        control.add(delete);
+        VerticalPanel panel = new VerticalPanel();
+        panel.add(control);
+        panel.add(userTable);
+        content.add(panel, "Пользователи");
+
+        //создаем таблицу документов и добавляем на вторую вкладку
+        CellTable<Document> docTable = new CellTable<>();
+        ListDataProvider<Document> dataDocProvider = createDocTable(docTable);
+        VerticalPanel docPanel = new VerticalPanel();
+        docPanel.add(docTable);
+        content.add(docPanel, "Документы");
+
+        content.setHeight("420px");
+        content.selectTab(0);
+        RootPanel.get().add(content);
+    }
+
+    private ListDataProvider<User> createUserTable(CellTable<User> table) {
         TextColumn<User> loginColumn = new TextColumn<User>() {
             @Override
             public String getValue(User user) {
@@ -51,8 +130,7 @@ public class GWTApp implements EntryPoint {
         this.userService.list(new AsyncCallback<List<User>>() {
             @Override
             public void onFailure(Throwable throwable) {
-                GWT.log("error", throwable);
-                Window.alert("error!");
+                Window.alert("Ошибка при получении данных из таблицы users!");
             }
             @Override
             public void onSuccess(List<User> people) {
@@ -62,66 +140,41 @@ public class GWTApp implements EntryPoint {
         return dataProvider;
     }
 
-
-
-    public void onModuleLoad() {
-        CellTable<User> table = new CellTable<>();
-        ListDataProvider<User> dataProvider = createTable(table);
-
-        DialogBox dialog = editDialog(dataProvider);
-        Button add = new Button("Добавить", new ClickHandler() {
+    private ListDataProvider<Document> createDocTable(CellTable<Document> table) {
+        TextColumn<Document> titleColumn = new TextColumn<Document>() {
             @Override
-            public void onClick(ClickEvent clickEvent) {
-                login.setValue("");
-                password.setValue("");
-                name.setValue("");
-                id = -1L;
-                dialog.center();
-                dialog.show();
+            public String getValue(Document doc) {
+                return doc.getTitle();
+            }
+        };
+        TextColumn<Document> descriptionColumn = new TextColumn<Document>() {
+            @Override
+            public String getValue(Document doc) {
+                return doc.getDescription();
+            }
+        };
+        TextColumn<Document> dateColumn = new TextColumn<Document>() {
+            @Override
+            public String getValue(Document doc) {
+                return doc.getData().toString();
+            }
+        };
+        table.addColumn(titleColumn, "Заголовок");
+        table.addColumn(descriptionColumn, "Описание");
+        table.addColumn(dateColumn, "Дата");
+        ListDataProvider<Document> dataProvider = new ListDataProvider<>();
+        dataProvider.addDataDisplay(table);
+        this.docService.list(new AsyncCallback<List<Document>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                Window.alert("Ошибка при получении данных из таблицы docs!");
+            }
+            @Override
+            public void onSuccess(List<Document> documents) {
+                dataProvider.getList().addAll(documents);
             }
         });
-
-        Button delete = new Button("Удалить", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                final int index = table.getKeyboardSelectedRow();
-                User user = dataProvider.getList().get(index);
-                userService.delete(user, new AsyncCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        GWT.log("error", throwable);
-                    }
-
-                    @Override
-                    public void onSuccess(Void v) {
-                        dataProvider.getList().remove(index);
-                    }
-                });
-            }
-        });
-
-        Button edit = new Button("Редактировать", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                User user = dataProvider.getList().get(table.getKeyboardSelectedRow());
-                login.setValue(user.getLogin());
-                password.setValue(user.getPassword());
-                name.setValue(user.getName());
-                id = user.getId();
-                //Window.alert("id= " + id);
-                dialog.center();
-                dialog.show();
-            }
-        });
-
-        HorizontalPanel control = new HorizontalPanel();
-        control.add(add);
-        control.add(edit);
-        control.add(delete);
-        VerticalPanel panel = new VerticalPanel();
-        panel.add(control);
-        panel.add(table);
-        RootPanel.get().add(panel);
+        return dataProvider;
     }
 
     private DialogBox editDialog(ListDataProvider<User> dataProvider) {

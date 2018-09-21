@@ -1,6 +1,8 @@
 package com.ardecs.springbootapp.entities;
 
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -8,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "docs")
-public class Document implements Serializable {
+public class Document implements IsSerializable {
     @Id @GeneratedValue
     private Long id;
     private Date data;
@@ -16,9 +18,9 @@ public class Document implements Serializable {
     private String description;
 
     private int user_id;
-//    @OneToMany
-//    @JoinColumn(name = "doc_id")
-//    private List<File> files;
+    @OneToMany
+    @JoinColumn(name = "doc_id")
+    private List<File> files;
 
     public Long getId() {
         return id;
@@ -60,11 +62,11 @@ public class Document implements Serializable {
         this.user_id = user_id;
     }
 
-//    public List<File> getFiles() {
-//        return files;
-//    }
-//
-//    public void setFiles(List<File> files) {
-//        this.files = files;
-//    }
+    public List<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
+    }
 }

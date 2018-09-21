@@ -2,12 +2,15 @@ package com.ardecs.springbootapp.entities;
 
 
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements IsSerializable {
     @Id
     @GeneratedValue(generator="UserSeq")
     @SequenceGenerator(name="UserSeq",sequenceName="USER_SEQ")

@@ -1,8 +1,7 @@
 package com.ardecs.springbootapp;
 
-import com.ardecs.springbootapp.server.services.DocServiceImpl;
-import com.ardecs.springbootapp.server.services.UserServiceImpl;
-
+import com.ardecs.springbootapp.server.services.remote.RemoteDocServiceImpl;
+import com.ardecs.springbootapp.server.services.remote.RemoteUserServiceImpl;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +29,7 @@ public class SpringConfig {
 //    return dataSourceBuilder.build();
 //}
     @Bean
-    ServletRegistrationBean userServiceRegistration(UserServiceImpl userService) {
+    ServletRegistrationBean userServiceRegistration(RemoteUserServiceImpl userService) {
         ServletRegistrationBean registrationBean = new ServletRegistrationBean(
                 userService, "/gwtApp/gwt.user_service/*");
         registrationBean.setServlet(userService);
@@ -39,7 +38,7 @@ public class SpringConfig {
     }
 
     @Bean
-    ServletRegistrationBean docServiceRegistration(DocServiceImpl docService) {
+    ServletRegistrationBean docServiceRegistration(RemoteDocServiceImpl docService) {
         ServletRegistrationBean registrationBean = new ServletRegistrationBean(
                 docService, "/gwtApp/gwt.doc_service/*");
         registrationBean.setServlet(docService);

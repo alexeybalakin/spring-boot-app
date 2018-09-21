@@ -18,8 +18,8 @@ import java.util.List;
 
 public class GWTApp implements EntryPoint {
 
-    private UserServiceAsync userService = GWT.create(UserService.class);
-    private DocServiceAsync docService = GWT.create(DocService.class);
+    private RemoteUserServiceAsync userService = GWT.create(RemoteUserService.class);
+    private RemoteDocServiceAsync docService = GWT.create(RemoteDocService.class);
 
     private final TextBox login = new TextBox();
     private final TextBox password = new TextBox();

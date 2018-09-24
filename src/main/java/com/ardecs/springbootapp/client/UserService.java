@@ -2,6 +2,7 @@ package com.ardecs.springbootapp.client;
 
 import java.util.List;
 
+import com.ardecs.springbootapp.client.dto.UserDTO;
 import com.ardecs.springbootapp.entities.User;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -10,12 +11,12 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("gwt.user_service")
 public interface UserService extends RemoteService {
 
-    List<User> list();
+    List<UserDTO> list();
 
-    User getUserById(int id);
+    //UserDTO getUserById(int id);
 
-    void delete(User user);
+    void delete(UserDTO user);
 
-    User save(User user);
+    UserDTO save(UserDTO user);
 
 }

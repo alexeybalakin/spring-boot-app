@@ -1,47 +1,27 @@
-package com.ardecs.springbootapp.entities;
+package com.ardecs.springbootapp.client.dto;
 
-
-
-import com.ardecs.springbootapp.client.dto.UserDTO;
-import com.google.gwt.user.client.rpc.IsSerializable;
-
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
-@Entity
-@Table(name = "users")
-public class User implements Serializable {
-    @Id
-    @GeneratedValue(generator="UserSeq")
-    @SequenceGenerator(name="UserSeq",sequenceName="USER_SEQ")
+public class UserDTO implements Serializable {
+
     private Long id;
     private String login;
     private String password;
     private String name;
-//    @OneToMany
-//    @JoinColumn(name = "user_id")
+
 //    private List<Document> documents;
 
-
-    public User() {
+    public UserDTO() {
     }
 
-    public User(UserDTO userDTO) {
-        this.id = userDTO.getId();
-        this.login = userDTO.getLogin();
-        this.password = userDTO.getPassword();
-        this.name = userDTO.getName();
-    }
-
-    public User(Long id, String login, String password, String name) {
+    public UserDTO(Long id, String login, String password, String name) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.name = name;
     }
 
-    public User(String login, String password, String name) {
+    public UserDTO(String login, String password, String name) {
         this.login = login;
         this.password = password;
         this.name = name;

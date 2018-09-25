@@ -1,6 +1,7 @@
 package com.ardecs.springbootapp.server.services.remote;
 
 import com.ardecs.springbootapp.client.RemoteUserService;
+import com.ardecs.springbootapp.client.dto.UserDTO;
 import com.ardecs.springbootapp.entities.User;
 import com.ardecs.springbootapp.server.services.UserService;
 import com.ardecs.springbootapp.server.util.ExtRemoteServiceServlet;
@@ -18,19 +19,19 @@ public class RemoteUserServiceImpl extends ExtRemoteServiceServlet implements Re
     private UserService userService;
 
     @Override
-    public List<User> list() {
+    public List<UserDTO> list() {
         return userService.list();
     }
+//    @Override
+//    public User getUserById(int id) {
+//        return userService.getUserById(id);
+//    }
     @Override
-    public User getUserById(int id) {
-        return userService.getUserById(id);
-    }
-    @Override
-    public void delete(User user) {
+    public void delete(UserDTO user) {
         userService.delete(user);
     }
     @Override
-    public User save(User data) {
+    public UserDTO save(UserDTO data) {
         return userService.save(data);
     }
 

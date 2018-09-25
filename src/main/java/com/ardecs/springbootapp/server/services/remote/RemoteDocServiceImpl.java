@@ -1,6 +1,7 @@
 package com.ardecs.springbootapp.server.services.remote;
 
 import com.ardecs.springbootapp.client.RemoteDocService;
+import com.ardecs.springbootapp.client.dto.DocumentDTO;
 import com.ardecs.springbootapp.entities.Document;
 import com.ardecs.springbootapp.server.services.DocService;
 import com.ardecs.springbootapp.server.util.ExtRemoteServiceServlet;
@@ -16,17 +17,17 @@ public class RemoteDocServiceImpl extends ExtRemoteServiceServlet implements Rem
     DocService docService;
 
     @Override
-    public List<Document> list() {
+    public List<DocumentDTO> list() {
         return docService.list();
     }
 
     @Override
-    public void delete(Document document) {
+    public void delete(DocumentDTO document) {
 
     }
 
     @Override
-    public Document save(Document document) {
+    public DocumentDTO save(DocumentDTO document) {
         return null;
     }
 }

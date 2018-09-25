@@ -21,7 +21,7 @@ public class Document implements Serializable {
     private String description;
 
     //private int user_id;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     @JoinColumn(name = "doc_id")
     private List<File> files;
 

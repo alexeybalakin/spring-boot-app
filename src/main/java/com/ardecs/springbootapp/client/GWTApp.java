@@ -162,13 +162,13 @@ public class GWTApp implements EntryPoint {
         TextColumn<DocumentDTO> userColumn = new TextColumn<DocumentDTO>() {
             @Override
             public String getValue(DocumentDTO doc) {
-                return doc.getId() + "";
+                return doc.getFiles().get(0).getName() + "";
             }
         };
         table.addColumn(titleColumn, "Заголовок");
         table.addColumn(descriptionColumn, "Описание");
         table.addColumn(dateColumn, "Дата");
-        table.addColumn(userColumn, "Владелец(user_id)");
+        table.addColumn(userColumn, "Файл");
         ListDataProvider<DocumentDTO> dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(table);
         this.docService.list(new AsyncCallback<List<DocumentDTO>>() {

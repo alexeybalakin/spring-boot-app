@@ -1,10 +1,12 @@
 package com.ardecs.springbootapp.server.services;
 
+import com.ardecs.springbootapp.client.dto.UserDTO;
 import com.ardecs.springbootapp.entities.User;
 import com.ardecs.springbootapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,19 +16,23 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
-    public List<User> list() {
-        return repository.findAll();
+    public List<UserDTO> list() {
+        List<UserDTO> users = new ArrayList<>();
+        for(User user : repository.findAll()){
+            users.add(new UserDTO(user.getId(), user.getLogin(), user.getPassword(), user.getName()));
+        }
+        return users;
     }
 
-    public User getUserById(int id) {
-        return repository.getOne(new Long(id));
-    }
+//    //public User getUserById(int id) {
+//        return repository.getOne(new Long(id));
+//    }
 
-    public void delete(User user) {
+    public void delete(UserDTO user) {
         repository.delete(user.getId());
     }
 
-    public User save(User data) {
+    public UserDTO save(UserDTO data) {
         User user = new User();
         user.setId(data.getId());
         user.setLogin(data.getLogin());

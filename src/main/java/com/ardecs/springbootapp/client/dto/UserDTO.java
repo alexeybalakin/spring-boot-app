@@ -1,6 +1,7 @@
 package com.ardecs.springbootapp.client.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class UserDTO implements Serializable {
 
@@ -9,7 +10,7 @@ public class UserDTO implements Serializable {
     private String password;
     private String name;
 
-//    private List<Document> documents;
+    private List<DocumentDTO> documents;
 
     public UserDTO() {
     }
@@ -59,11 +60,11 @@ public class UserDTO implements Serializable {
         this.name = name;
     }
 
-//    public List<Document> getDocuments() {
-//        return documents;
-//    }
-//
-//    public void setDocuments(List<Document> documents) {
-//        this.documents = documents;
-//    }
+    public List<DocumentDTO> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<DocumentDTO> documents) {
+        this.documents = documents;
+    }
 }

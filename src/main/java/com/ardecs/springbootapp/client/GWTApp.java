@@ -2,20 +2,22 @@ package com.ardecs.springbootapp.client;
 
 import com.ardecs.springbootapp.client.dto.DocumentDTO;
 import com.ardecs.springbootapp.client.dto.UserDTO;
-import com.ardecs.springbootapp.entities.Document;
-import com.ardecs.springbootapp.entities.User;
+import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 
+import java.util.Date;
 import java.util.List;
 
 public class GWTApp implements EntryPoint {
@@ -153,22 +155,25 @@ public class GWTApp implements EntryPoint {
                 return doc.getDescription();
             }
         };
-        TextColumn<DocumentDTO> dateColumn = new TextColumn<DocumentDTO>() {
+
+        DateTimeFormat dateFormat = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_SHORT);
+        Column<DocumentDTO, Date> dateColumn = new Column<DocumentDTO, Date>(new DateCell(dateFormat)) {
             @Override
-            public String getValue(DocumentDTO doc) {
-                return doc.getData().toString();
+            public Date getValue(DocumentDTO object) {
+                return object.getData();
             }
         };
+
         TextColumn<DocumentDTO> userColumn = new TextColumn<DocumentDTO>() {
             @Override
             public String getValue(DocumentDTO doc) {
-                return doc.getFiles().get(0).getName() + "";
+                return doc.getUser().getName();
             }
         };
         table.addColumn(titleColumn, "Заголовок");
         table.addColumn(descriptionColumn, "Описание");
         table.addColumn(dateColumn, "Дата");
-        table.addColumn(userColumn, "Файл");
+        table.addColumn(userColumn, "Владелец");
         ListDataProvider<DocumentDTO> dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(table);
         this.docService.list(new AsyncCallback<List<DocumentDTO>>() {

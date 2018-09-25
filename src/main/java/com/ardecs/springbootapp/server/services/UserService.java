@@ -24,10 +24,6 @@ public class UserService {
         return users;
     }
 
-//    //public User getUserById(int id) {
-//        return repository.getOne(new Long(id));
-//    }
-
     public void delete(UserDTO user) {
         repository.delete(user.getId());
     }

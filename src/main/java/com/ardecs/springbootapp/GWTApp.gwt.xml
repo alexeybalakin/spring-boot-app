@@ -9,7 +9,6 @@
     <entry-point class='com.ardecs.springbootapp.client.GWTApp'/>
 
     <!-- Specify the paths for translatable code                    -->
-    <source path="entities"/>
     <source path="client"/>
 
 </module>

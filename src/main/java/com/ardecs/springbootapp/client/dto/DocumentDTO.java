@@ -1,9 +1,5 @@
 package com.ardecs.springbootapp.client.dto;
 
-import com.ardecs.springbootapp.entities.File;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -13,21 +9,21 @@ public class DocumentDTO implements Serializable {
     private Date data;
     private String title;
     private String description;
-
-    //private int user_id;
+    private List<FileDTO> files;
+    private UserDTO user;
 
     public DocumentDTO() {
     }
 
-    public DocumentDTO(Long id, Date data, String title, String description, List<FileDTO> files) {
+    public DocumentDTO(Long id, Date data, String title, String description, List<FileDTO> files, UserDTO user) {
         this.id = id;
         this.data = data;
         this.title = title;
         this.description = description;
         this.files = files;
+        this.user = user;
     }
 
-    private List<FileDTO> files;
 
     public Long getId() {
         return id;
@@ -67,5 +63,13 @@ public class DocumentDTO implements Serializable {
 
     public void setFiles(List<FileDTO> files) {
         this.files = files;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 }

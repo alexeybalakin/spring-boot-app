@@ -3,7 +3,6 @@ package com.ardecs.springbootapp.entities;
 
 import com.ardecs.springbootapp.client.dto.DocumentDTO;
 import com.ardecs.springbootapp.client.dto.FileDTO;
-import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,10 +19,13 @@ public class Document implements Serializable {
     private String title;
     private String description;
 
-    //private int user_id;
     @OneToMany
     @JoinColumn(name = "doc_id")
     private List<File> files;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Document() {
     }
@@ -33,6 +35,7 @@ public class Document implements Serializable {
         this.data = documentDTO.getData();
         this.title = documentDTO.getTitle();
         this.description = documentDTO.getDescription();
+        this.user = new User(documentDTO.getUser());
         List<FileDTO> fileDTOS = documentDTO.getFiles();
         if (fileDTOS !=null){
             List<File> files = new ArrayList<>();
@@ -75,14 +78,6 @@ public class Document implements Serializable {
         this.description = description;
     }
 
-//    public int getUser_id() {
-//        return user_id;
-//    }
-//
-//    public void setUser_id(int user_id) {
-//        this.user_id = user_id;
-//    }
-
     public List<File> getFiles() {
         return files;
     }
@@ -90,4 +85,13 @@ public class Document implements Serializable {
     public void setFiles(List<File> files) {
         this.files = files;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }

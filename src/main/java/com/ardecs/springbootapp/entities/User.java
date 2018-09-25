@@ -1,9 +1,7 @@
 package com.ardecs.springbootapp.entities;
 
 
-
 import com.ardecs.springbootapp.client.dto.UserDTO;
-import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,9 +17,8 @@ public class User implements Serializable {
     private String login;
     private String password;
     private String name;
-//    @OneToMany
-//    @JoinColumn(name = "user_id")
-//    private List<Document> documents;
+    @OneToMany(mappedBy = "user")
+    private List<Document> documents;
 
 
     public User() {
@@ -79,11 +76,11 @@ public class User implements Serializable {
         this.name = name;
     }
 
-//    public List<Document> getDocuments() {
-//        return documents;
-//    }
-//
-//    public void setDocuments(List<Document> documents) {
-//        this.documents = documents;
-//    }
+    public List<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
+    }
 }

@@ -1,5 +1,7 @@
 package com.ardecs.springbootapp.client;
 
+import com.ardecs.springbootapp.client.dto.DocumentDTO;
+import com.ardecs.springbootapp.client.dto.UserDTO;
 import com.ardecs.springbootapp.entities.Document;
 import com.ardecs.springbootapp.entities.User;
 import com.google.gwt.core.client.EntryPoint;
@@ -32,8 +34,8 @@ public class GWTApp implements EntryPoint {
     public void onModuleLoad() {
 
         //создаем таблицу юзеров и добавляем на первую вкладку
-        CellTable<User> userTable = new CellTable<>();
-        ListDataProvider<User> dataProvider = createUserTable(userTable);
+        CellTable<UserDTO> userTable = new CellTable<>();
+        ListDataProvider<UserDTO> dataProvider = createUserTable(userTable);
         DialogBox dialog = editDialog(dataProvider);
         Button add = new Button("Добавить", new ClickHandler() {
             @Override
@@ -51,7 +53,7 @@ public class GWTApp implements EntryPoint {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 final int index = userTable.getKeyboardSelectedRow();
-                User user = dataProvider.getList().get(index);
+                UserDTO user = dataProvider.getList().get(index);
                 userService.delete(user, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -69,7 +71,7 @@ public class GWTApp implements EntryPoint {
         Button edit = new Button("Редактировать", new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                User user = dataProvider.getList().get(userTable.getKeyboardSelectedRow());
+                UserDTO user = dataProvider.getList().get(userTable.getKeyboardSelectedRow());
                 login.setValue(user.getLogin());
                 password.setValue(user.getPassword());
                 name.setValue(user.getName());
@@ -90,8 +92,8 @@ public class GWTApp implements EntryPoint {
         content.add(panel, "Пользователи");
 
         //создаем таблицу документов и добавляем на вторую вкладку
-        CellTable<Document> docTable = new CellTable<>();
-        ListDataProvider<Document> dataDocProvider = createDocTable(docTable);
+        CellTable<DocumentDTO> docTable = new CellTable<>();
+        ListDataProvider<DocumentDTO> dataDocProvider = createDocTable(docTable);
         VerticalPanel docPanel = new VerticalPanel();
         docPanel.add(docTable);
         content.add(docPanel, "Документы");
@@ -101,88 +103,88 @@ public class GWTApp implements EntryPoint {
         RootPanel.get().add(content);
     }
 
-    private ListDataProvider<User> createUserTable(CellTable<User> table) {
-        TextColumn<User> loginColumn = new TextColumn<User>() {
+    private ListDataProvider<UserDTO> createUserTable(CellTable<UserDTO> table) {
+        TextColumn<UserDTO> loginColumn = new TextColumn<UserDTO>() {
             @Override
-            public String getValue(User user) {
+            public String getValue(UserDTO user) {
                 return user.getLogin();
             }
         };
-        TextColumn<User> passwordColumn = new TextColumn<User>() {
+        TextColumn<UserDTO> passwordColumn = new TextColumn<UserDTO>() {
             @Override
-            public String getValue(User user) {
+            public String getValue(UserDTO user) {
                 return user.getPassword();
             }
         };
-        TextColumn<User> nameColumn = new TextColumn<User>() {
+        TextColumn<UserDTO> nameColumn = new TextColumn<UserDTO>() {
             @Override
-            public String getValue(User user) {
+            public String getValue(UserDTO user) {
                 return user.getName();
             }
         };
         table.addColumn(loginColumn, "Логин");
         table.addColumn(passwordColumn, "Пароль");
         table.addColumn(nameColumn, "Имя");
-        ListDataProvider<User> dataProvider = new ListDataProvider<>();
+        ListDataProvider<UserDTO> dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(table);
-        this.userService.list(new AsyncCallback<List<User>>() {
+        this.userService.list(new AsyncCallback<List<UserDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 Window.alert("Ошибка при получении данных из таблицы users!");
             }
             @Override
-            public void onSuccess(List<User> people) {
+            public void onSuccess(List<UserDTO> people) {
                 dataProvider.getList().addAll(people);
             }
         });
         return dataProvider;
     }
 
-    private ListDataProvider<Document> createDocTable(CellTable<Document> table) {
-        TextColumn<Document> titleColumn = new TextColumn<Document>() {
+    private ListDataProvider<DocumentDTO> createDocTable(CellTable<DocumentDTO> table) {
+        TextColumn<DocumentDTO> titleColumn = new TextColumn<DocumentDTO>() {
             @Override
-            public String getValue(Document doc) {
+            public String getValue(DocumentDTO doc) {
                 return doc.getTitle();
             }
         };
-        TextColumn<Document> descriptionColumn = new TextColumn<Document>() {
+        TextColumn<DocumentDTO> descriptionColumn = new TextColumn<DocumentDTO>() {
             @Override
-            public String getValue(Document doc) {
+            public String getValue(DocumentDTO doc) {
                 return doc.getDescription();
             }
         };
-        TextColumn<Document> dateColumn = new TextColumn<Document>() {
+        TextColumn<DocumentDTO> dateColumn = new TextColumn<DocumentDTO>() {
             @Override
-            public String getValue(Document doc) {
+            public String getValue(DocumentDTO doc) {
                 return doc.getData().toString();
             }
         };
-        TextColumn<Document> userColumn = new TextColumn<Document>() {
+        TextColumn<DocumentDTO> userColumn = new TextColumn<DocumentDTO>() {
             @Override
-            public String getValue(Document doc) {
-                return doc.getUser_id() + "";
+            public String getValue(DocumentDTO doc) {
+                return doc.getId() + "";
             }
         };
         table.addColumn(titleColumn, "Заголовок");
         table.addColumn(descriptionColumn, "Описание");
         table.addColumn(dateColumn, "Дата");
         table.addColumn(userColumn, "Владелец(user_id)");
-        ListDataProvider<Document> dataProvider = new ListDataProvider<>();
+        ListDataProvider<DocumentDTO> dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(table);
-        this.docService.list(new AsyncCallback<List<Document>>() {
+        this.docService.list(new AsyncCallback<List<DocumentDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 Window.alert("Ошибка при получении данных из таблицы docs!");
             }
             @Override
-            public void onSuccess(List<Document> documents) {
+            public void onSuccess(List<DocumentDTO> documents) {
                 dataProvider.getList().addAll(documents);
             }
         });
         return dataProvider;
     }
 
-    private DialogBox editDialog(ListDataProvider<User> dataProvider) {
+    private DialogBox editDialog(ListDataProvider<UserDTO> dataProvider) {
         final DialogBox dialogBox = new DialogBox();
         dialogBox.setText("Добавить запись");
         dialogBox.setAnimationEnabled(true);
@@ -212,17 +214,17 @@ public class GWTApp implements EntryPoint {
         HorizontalPanel dcontrol = new HorizontalPanel();
         dcontrol.add(new Button("Сохранить", new ClickHandler() {
             public void onClick(ClickEvent event) {
-                User newUser = new User(id, login.getValue(), password.getValue(), name.getValue());
+                UserDTO newUser = new UserDTO(id, login.getValue(), password.getValue(), name.getValue());
                 //Window.alert(" user.id= " + newUser.getId() + " user.login = " + newUser.getLogin() + " pass = " + newUser.getPassword());
 
-                userService.save(newUser, new AsyncCallback<User>() {
+                userService.save(newUser, new AsyncCallback<UserDTO>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                         GWT.log("error", throwable);
                         Window.alert("Save error! ");
                     }
                     @Override
-                    public void onSuccess(User user) {
+                    public void onSuccess(UserDTO user) {
                         if (id != -1) {
                             dataProvider.getList().set(dataProvider.getList().indexOf(user), user);
                         } else {

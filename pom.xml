@@ -106,6 +106,17 @@
 
         <!-- GWT -->
         <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <version>${gwt.version}</version>
@@ -148,7 +159,7 @@
                         <goals>
                             <goal>compile</goal>
                             <goal>test</goal>
-                            <goal>generateAsync</goal>
+                            <!--<goal>generateAsync</goal>-->
                         </goals>
                     </execution>
                 </executions>

@@ -1,11 +1,12 @@
 package com.ardecs.springbootapp.entities;
 
-
-import com.ardecs.springbootapp.client.dto.UserDTO;
-
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -17,18 +18,12 @@ public class User implements Serializable {
     private String login;
     private String password;
     private String name;
-    @OneToMany(mappedBy = "user")
-    private List<Document> documents;
+//    @OneToMany
+//    @JoinColumn(name = "user_id")
+//    private List<Document> documents;
 
 
     public User() {
-    }
-
-    public User(UserDTO userDTO) {
-        this.id = userDTO.getId();
-        this.login = userDTO.getLogin();
-        this.password = userDTO.getPassword();
-        this.name = userDTO.getName();
     }
 
     public User(Long id, String login, String password, String name) {
@@ -76,11 +71,4 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public List<Document> getDocuments() {
-        return documents;
-    }
-
-    public void setDocuments(List<Document> documents) {
-        this.documents = documents;
-    }
 }

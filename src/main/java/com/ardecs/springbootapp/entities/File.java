@@ -2,7 +2,6 @@ package com.ardecs.springbootapp.entities;
 
 
 import com.ardecs.springbootapp.client.dto.FileDTO;
-import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

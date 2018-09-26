@@ -2,7 +2,6 @@ package com.ardecs.springbootapp.server.services.remote;
 
 import com.ardecs.springbootapp.client.RemoteDocService;
 import com.ardecs.springbootapp.client.dto.DocumentDTO;
-import com.ardecs.springbootapp.entities.Document;
 import com.ardecs.springbootapp.server.services.DocService;
 import com.ardecs.springbootapp.server.util.ExtRemoteServiceServlet;
 import org.springframework.beans.factory.annotation.Autowired;

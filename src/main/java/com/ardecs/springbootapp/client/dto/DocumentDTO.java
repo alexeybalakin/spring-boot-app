@@ -24,6 +24,13 @@ public class DocumentDTO implements Serializable {
         this.user = user;
     }
 
+    public DocumentDTO(Long id, Date data, String title, String description, UserDTO user) {
+        this.id = id;
+        this.data = data;
+        this.title = title;
+        this.description = description;
+        this.user = user;
+    }
 
     public Long getId() {
         return id;

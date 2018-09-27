@@ -2,6 +2,8 @@ package com.ardecs.springbootapp.client;
 
 import com.ardecs.springbootapp.client.dto.DocumentDTO;
 import com.ardecs.springbootapp.client.dto.UserDTO;
+import com.google.gwt.cell.client.ActionCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -29,16 +31,22 @@ public class GWTApp implements EntryPoint {
     private final TextBox password = new TextBox();
     private final TextBox name = new TextBox();
 
-    private TabLayoutPanel content = new TabLayoutPanel(20, Style.Unit.PX);;
+    private final TextBox title = new TextBox();
+    private final TextBox description = new TextBox();
+    private final TextBox date = new TextBox();
+
+    private TabLayoutPanel tabLayoutPanel = new TabLayoutPanel(20, Style.Unit.PX);;
 
     private Long id = -1L;
+
+    private ListDataProvider<DocumentDTO> documentDataProvider = new ListDataProvider<>();
 
     public void onModuleLoad() {
 
         //создаем таблицу юзеров и добавляем на первую вкладку
         CellTable<UserDTO> userTable = new CellTable<>();
         ListDataProvider<UserDTO> dataProvider = createUserTable(userTable);
-        DialogBox dialog = editDialog(dataProvider);
+        DialogBox userDialog = editUserDialog(dataProvider);
         Button add = new Button("Добавить", new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -46,8 +54,8 @@ public class GWTApp implements EntryPoint {
                 password.setValue("");
                 name.setValue("");
                 id = -1L;
-                dialog.center();
-                dialog.show();
+                userDialog.center();
+                userDialog.show();
             }
         });
 
@@ -59,7 +67,7 @@ public class GWTApp implements EntryPoint {
                 userService.delete(user, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable throwable) {
-                        GWT.log("error", throwable);
+                        Window.alert("Ошибка при удалении пользователя " + user.getName());
                     }
 
                     @Override
@@ -78,31 +86,80 @@ public class GWTApp implements EntryPoint {
                 password.setValue(user.getPassword());
                 name.setValue(user.getName());
                 id = user.getId();
-                //Window.alert("id= " + id);
-                dialog.center();
-                dialog.show();
+                userDialog.center();
+                userDialog.show();
             }
         });
-
-        HorizontalPanel control = new HorizontalPanel();
-        control.add(add);
-        control.add(edit);
-        control.add(delete);
+        HorizontalPanel userControl = new HorizontalPanel();
+        userControl.add(add);
+        userControl.add(edit);
+        userControl.add(delete);
         VerticalPanel panel = new VerticalPanel();
-        panel.add(control);
+        panel.add(userControl);
         panel.add(userTable);
-        content.add(panel, "Пользователи");
+        tabLayoutPanel.add(panel, "Пользователи");
 
         //создаем таблицу документов и добавляем на вторую вкладку
         CellTable<DocumentDTO> docTable = new CellTable<>();
         ListDataProvider<DocumentDTO> dataDocProvider = createDocTable(docTable);
-        VerticalPanel docPanel = new VerticalPanel();
-        docPanel.add(docTable);
-        content.add(docPanel, "Документы");
 
-        content.setHeight("420px");
-        content.selectTab(0);
-        RootPanel.get().add(content);
+        DialogBox docDialog = editDocDialog(dataDocProvider);
+        Button addDoc = new Button("Добавить", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                title.setValue("");
+                description.setValue("");
+                date.setValue("");
+                id = -1L;
+                docDialog.center();
+                docDialog.show();
+            }
+        });
+
+        Button deleteDoc = new Button("Удалить", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                final int index = docTable.getKeyboardSelectedRow();
+                DocumentDTO document = dataDocProvider.getList().get(index);
+                docService.delete(document, new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Window.alert("Ошибка при удалении документа " + document.getTitle());
+                    }
+
+                    @Override
+                    public void onSuccess(Void v) {
+                        dataDocProvider.getList().remove(index);
+                    }
+                });
+            }
+        });
+
+        Button editDoc = new Button("Редактировать", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                DocumentDTO document = dataDocProvider.getList().get(docTable.getKeyboardSelectedRow());
+                title.setValue(document.getTitle());
+                description.setValue(document.getDescription());
+                date.setValue(document.getData().toString());
+                id = document.getId();
+                docDialog.center();
+                docDialog.show();
+            }
+        });
+        HorizontalPanel docControl = new HorizontalPanel();
+        docControl.add(addDoc);
+        docControl.add(editDoc);
+        docControl.add(deleteDoc);
+
+        VerticalPanel docPanel = new VerticalPanel();
+        docPanel.add(docControl);
+        docPanel.add(docTable);
+        tabLayoutPanel.add(docPanel, "Документы");
+
+        tabLayoutPanel.setHeight("420px");
+        tabLayoutPanel.selectTab(0);
+        RootPanel.get().add(tabLayoutPanel);
     }
 
     private ListDataProvider<UserDTO> createUserTable(CellTable<UserDTO> table) {
@@ -124,9 +181,39 @@ public class GWTApp implements EntryPoint {
                 return user.getName();
             }
         };
+
+        Cell<UserDTO> cell = new ActionCell<UserDTO>("Документы", new ActionCell.Delegate<UserDTO>() {
+            @Override
+            public void execute(UserDTO userDTO) {
+                Window.alert("Документы пользователя: " + userDTO.getName());
+
+                docService.listByUser(userDTO, new AsyncCallback<List<DocumentDTO>>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Window.alert("Ошибка при получении документов пользователя " + userDTO.getName());
+                    }
+
+                    @Override
+                    public void onSuccess(List<DocumentDTO> result) {
+                        documentDataProvider.getList().clear();
+                        documentDataProvider.getList().addAll(result);
+                    }
+                });
+                tabLayoutPanel.selectTab(1);
+            }
+        });
+
+        Column<UserDTO, UserDTO>  buttonColumn = new Column<UserDTO, UserDTO>(cell) {
+            @Override
+            public UserDTO getValue(UserDTO object) {
+                return object;
+            }
+        };
+
         table.addColumn(loginColumn, "Логин");
         table.addColumn(passwordColumn, "Пароль");
         table.addColumn(nameColumn, "Имя");
+        table.addColumn(buttonColumn,"Документы");
         ListDataProvider<UserDTO> dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(table);
         this.userService.list(new AsyncCallback<List<UserDTO>>() {
@@ -174,22 +261,23 @@ public class GWTApp implements EntryPoint {
         table.addColumn(descriptionColumn, "Описание");
         table.addColumn(dateColumn, "Дата");
         table.addColumn(userColumn, "Владелец");
-        ListDataProvider<DocumentDTO> dataProvider = new ListDataProvider<>();
-        dataProvider.addDataDisplay(table);
+
+        documentDataProvider.addDataDisplay(table);
         this.docService.list(new AsyncCallback<List<DocumentDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 Window.alert("Ошибка при получении данных из таблицы docs!");
             }
             @Override
-            public void onSuccess(List<DocumentDTO> documents) {
-                dataProvider.getList().addAll(documents);
+            public void onSuccess(List<DocumentDTO> result) {
+                documentDataProvider.getList().addAll(result);
             }
         });
-        return dataProvider;
+        return documentDataProvider;
     }
 
-    private DialogBox editDialog(ListDataProvider<UserDTO> dataProvider) {
+    //диалоговое окно для добавления/редактирования пользователя
+    private DialogBox editUserDialog(ListDataProvider<UserDTO> dataProvider) {
         final DialogBox dialogBox = new DialogBox();
         dialogBox.setText("Добавить запись");
         dialogBox.setAnimationEnabled(true);
@@ -220,7 +308,6 @@ public class GWTApp implements EntryPoint {
         dcontrol.add(new Button("Сохранить", new ClickHandler() {
             public void onClick(ClickEvent event) {
                 UserDTO newUser = new UserDTO(id, login.getValue(), password.getValue(), name.getValue());
-                //Window.alert(" user.id= " + newUser.getId() + " user.login = " + newUser.getLogin() + " pass = " + newUser.getPassword());
 
                 userService.save(newUser, new AsyncCallback<UserDTO>() {
                     @Override
@@ -238,6 +325,67 @@ public class GWTApp implements EntryPoint {
                         dialogBox.hide();
                     }
                 });
+            }
+        }));
+        dcontrol.add(new Button("Отменить", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                dialogBox.hide();
+            }
+        }));
+        dpanel.add(dcontrol);
+        dialogBox.setWidget(dpanel);
+        return dialogBox;
+    }
+
+    //диалоговое окно для добавления/редактирования документа
+    private DialogBox editDocDialog(ListDataProvider<DocumentDTO> dataProvider) {
+        final DialogBox dialogBox = new DialogBox();
+        dialogBox.setText("Добавить запись");
+        dialogBox.setAnimationEnabled(true);
+        VerticalPanel dpanel = new VerticalPanel();
+
+        HorizontalPanel titlePanel = new HorizontalPanel();
+        Label labelLogin = new Label("Заголовок");
+        labelLogin.setWidth("100px");
+        titlePanel.add(labelLogin);
+        titlePanel.add(title);
+        dpanel.add(titlePanel);
+
+        HorizontalPanel descPanel = new HorizontalPanel();
+        Label labelPas = new Label("Описание");
+        labelPas.setWidth("100px");
+        descPanel.add(labelPas);
+        descPanel.add(description);
+        dpanel.add(descPanel);
+
+        HorizontalPanel datePanel = new HorizontalPanel();
+        Label labelName = new Label("Имя");
+        labelName.setWidth("100px");
+        datePanel.add(labelName);
+        datePanel.add(date);
+        dpanel.add(datePanel);
+
+        HorizontalPanel dcontrol = new HorizontalPanel();
+        dcontrol.add(new Button("Сохранить", new ClickHandler() {
+            public void onClick(ClickEvent event) {
+              //  DocumentDTO newDoc = new DocumentDTO(id,  new Date(date.getValue()), title.getValue(), description.getValue(), userDTO);
+
+//                docService.save(newDoc, new AsyncCallback<DocumentDTO>() {
+//                    @Override
+//                    public void onFailure(Throwable throwable) {
+//                        Window.alert("Save error! ");
+//                    }
+//                    @Override
+//                    public void onSuccess(UserDTO user) {
+//                        if (id != -1) {
+//                            dataProvider.getList().set(dataProvider.getList().indexOf(user), user);
+//                        } else {
+//                            dataProvider.getList().add(user);
+//                        }
+//                        dialogBox.hide();
+//                    }
+//                });
             }
         }));
         dcontrol.add(new Button("Отменить", new ClickHandler() {

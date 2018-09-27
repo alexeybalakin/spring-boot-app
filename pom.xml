@@ -153,6 +153,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <style>PRETTY</style>
                     <runTarget>GWTApp.html</runTarget>
                     <modules>
                         <module>com.ardecs.springbootapp.GWTApp</module>

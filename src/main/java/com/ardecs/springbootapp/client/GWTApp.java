@@ -34,7 +34,7 @@ public class GWTApp implements EntryPoint {
 
     private final TextBox title = new TextBox();
     private final TextBox description = new TextBox();
-    //private final TextBox date = new TextBox();
+
     private final DateBox date = new DateBox();
 
     private TabLayoutPanel tabLayoutPanel = new TabLayoutPanel(20, Style.Unit.PX);;
@@ -43,8 +43,7 @@ public class GWTApp implements EntryPoint {
 
     private CellTable<DocumentDTO> docTable = new CellTable<>();
     private ListDataProvider<DocumentDTO> dataDocProvider;
-    private VerticalPanel docPanel;
-    private Panel docControl;
+    private HorizontalPanel docControl;
 
     private UserDTO currentUser;
 
@@ -112,7 +111,7 @@ public class GWTApp implements EntryPoint {
         docControl = createDocControlPanel(docTable, dataDocProvider);
         docControl.setVisible(false);
 
-        docPanel = new VerticalPanel();
+        VerticalPanel docPanel = new VerticalPanel();
         docPanel.add(docControl);
         docPanel.add(docTable);
         tabLayoutPanel.add(docPanel, "Документы");
@@ -122,7 +121,7 @@ public class GWTApp implements EntryPoint {
         RootPanel.get().add(tabLayoutPanel);
     }
 
-    private Panel createDocControlPanel(CellTable<DocumentDTO> docTable, ListDataProvider<DocumentDTO> dataDocProvider) {
+    private HorizontalPanel createDocControlPanel(CellTable<DocumentDTO> docTable, ListDataProvider<DocumentDTO> dataDocProvider) {
         DialogBox docDialog = editDocDialog(dataDocProvider);
         Button addDoc = new Button("Добавить", new ClickHandler() {
             @Override
@@ -377,6 +376,73 @@ public class GWTApp implements EntryPoint {
         datePanel.add(labelName);
         datePanel.add(date);
         dpanel.add(datePanel);
+
+//форма для загрузки файла
+        VerticalPanel panel = new VerticalPanel();
+        //create a FormPanel
+        final FormPanel form = new FormPanel();
+        //create a file upload widget
+        final FileUpload fileUpload = new FileUpload();
+        //create labels
+        Label selectLabel = new Label("Select a file:");
+        //create upload button
+        Button uploadButton = new Button("Upload File");
+        //pass action to the form to point to service handling file
+        //receiving operation.
+        form.setAction("/upload.jsp");
+        // set form to use the POST method, and multipart MIME encoding.
+        form.setEncoding(FormPanel.ENCODING_MULTIPART);
+        form.setMethod(FormPanel.METHOD_POST);
+
+        //add a label
+        panel.add(selectLabel);
+        //add fileUpload widget
+        panel.add(fileUpload);
+        //add a button to upload the file
+        panel.add(uploadButton);
+        uploadButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                //get the filename to be uploaded
+                String filename = fileUpload.getFilename();
+                if (filename.length() == 0) {
+                    Window.alert("No File Specified!");
+                } else {
+                    //submit the form
+                    form.submit();
+                }
+            }
+        });
+
+        form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+            @Override
+            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
+                // When the form submission is successfully completed, this
+                //event is fired. Assuming the service returned a response
+                //of type text/html, we can get the result text here
+                Window.alert(event.getResults());
+            }
+        });
+        panel.setSpacing(10);
+
+        // Add form to the root panel.
+        form.add(panel);
+
+        dpanel.add(form);
+
+
+
+
+//        FileUpload upload = new FileUpload();
+//        upload.setName("uploadFormElement");
+//        dpanel.add(upload);
+//
+//        // Add a 'submit' button.
+//        dpanel.add(new Button("Submit", new ClickHandler() {
+//            public void onClick(ClickEvent event) {
+//                //form.submit();
+//            }
+//        }));
 
         HorizontalPanel dcontrol = new HorizontalPanel();
         dcontrol.add(new Button("Сохранить", new ClickHandler() {

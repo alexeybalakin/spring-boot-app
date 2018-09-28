@@ -13,7 +13,9 @@ import java.util.List;
 @Entity
 @Table(name = "docs")
 public class Document implements Serializable {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(generator="DocSeq")
+    @SequenceGenerator(name="DocSeq",sequenceName="DOC_SEQ")
     private Long id;
     private Date data;
     private String title;

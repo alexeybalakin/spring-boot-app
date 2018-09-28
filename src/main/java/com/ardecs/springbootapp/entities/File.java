@@ -3,16 +3,15 @@ package com.ardecs.springbootapp.entities;
 
 import com.ardecs.springbootapp.client.dto.FileDTO;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "files")
 public class File implements Serializable {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(generator="FileSeq")
+    @SequenceGenerator(name="FileSeq",sequenceName="FILE_SEQ")
     private Long id;
     private String name;
 

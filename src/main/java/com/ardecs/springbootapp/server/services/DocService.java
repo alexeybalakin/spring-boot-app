@@ -60,6 +60,7 @@ public class DocService {
         document.setData(data.getData());
         document.setDescription(data.getDescription());
         document. setTitle(data.getTitle());
+        document.setUser(new User(data.getUser()));
         repository.save(document);
         data.setId(document.getId());
         return data;

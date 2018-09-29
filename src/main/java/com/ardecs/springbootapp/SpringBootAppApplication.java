@@ -13,4 +13,12 @@ public class SpringBootAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringBootAppApplication.class, args);
     }
+
+//    @Bean
+//    CommandLineRunner init(StorageService storageService) {
+//        return (args) -> {
+//            storageService.deleteAll();
+//            storageService.init();
+//        };
+//    }
 }

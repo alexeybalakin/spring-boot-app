@@ -14,6 +14,9 @@ public class File implements Serializable {
     @SequenceGenerator(name="FileSeq",sequenceName="FILE_SEQ")
     private Long id;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "doc_id")
+    private Document document;
 
     public File() {
     }

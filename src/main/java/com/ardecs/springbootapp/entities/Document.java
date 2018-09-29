@@ -21,8 +21,8 @@ public class Document implements Serializable {
     private String title;
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "doc_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "document", orphanRemoval = true)
+    //@JoinColumn(name = "doc_id")
     private List<File> files;
 
     @ManyToOne

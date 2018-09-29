@@ -35,4 +35,9 @@ public class RemoteDocServiceImpl extends ExtRemoteServiceServlet implements Rem
     public DocumentDTO save(DocumentDTO document) {
         return docService.save(document);
     }
+
+    @Override
+    public DocumentDTO saveWithFile(DocumentDTO document) {
+        return docService.saveWithFile(document);
+    }
 }

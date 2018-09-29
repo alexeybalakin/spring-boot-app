@@ -24,12 +24,8 @@ public class DocService {
     public List<DocumentDTO> list() {
         List<DocumentDTO> documents = new ArrayList<>();
         for(Document document : repository.findAll()){
-            List<FileDTO> files = new ArrayList<>();
-            for (File file : document.getFiles()){
-                files.add(new FileDTO(file.getId(), file.getName()));
-            }
-            documents.add(new DocumentDTO(document.getId(), document.getData(), document.getTitle(),
-                    document.getDescription(), files, new UserDTO(document.getUser().getId(), document.getUser().getLogin(),
+             documents.add(new DocumentDTO(document.getId(), document.getData(), document.getTitle(),
+                    document.getDescription(), getFileListDTO(document.getFiles()), new UserDTO(document.getUser().getId(), document.getUser().getLogin(),
                     document.getUser().getPassword(), document.getUser().getName())));
         }
         return documents;
@@ -39,12 +35,8 @@ public class DocService {
     public List<DocumentDTO> listByUser(UserDTO userDTO){
         List<DocumentDTO> documents = new ArrayList<>();
         for(Document document : repository.findAllByUser(new User(userDTO))){
-            List<FileDTO> files = new ArrayList<>();
-            for (File file : document.getFiles()){
-                files.add(new FileDTO(file.getId(), file.getName()));
-            }
             documents.add(new DocumentDTO(document.getId(), document.getData(), document.getTitle(),
-                    document.getDescription(), files, new UserDTO(document.getUser().getId(), document.getUser().getLogin(),
+                    document.getDescription(), getFileListDTO(document.getFiles()), new UserDTO(document.getUser().getId(), document.getUser().getLogin(),
                     document.getUser().getPassword(), document.getUser().getName())));
         }
         return documents;
@@ -59,11 +51,26 @@ public class DocService {
         document.setId(data.getId());
         document.setData(data.getData());
         document.setDescription(data.getDescription());
-        document. setTitle(data.getTitle());
+        document.setTitle(data.getTitle());
         document.setUser(new User(data.getUser()));
         repository.save(document);
         data.setId(document.getId());
         return data;
+    }
+
+    public DocumentDTO saveWithFile(DocumentDTO data) {
+        Document document = new Document(data);
+        repository.save(document);
+        data.setId(document.getId());
+        return data;
+    }
+
+    private List<FileDTO> getFileListDTO(List<File> fileList) {
+        List<FileDTO> files = new ArrayList<>();
+        for (File file : fileList) {
+            files.add(new FileDTO(file.getId(), file.getName()));
+        }
+        return files;
     }
 
 

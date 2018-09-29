@@ -33,7 +33,7 @@ public class UserService {
         user.setId(data.getId());
         user.setLogin(data.getLogin());
         user.setPassword(data.getPassword());
-        user. setName(data.getName());
+        user.setName(data.getName());
         repository.save(user);
         data.setId(user.getId());
         return data;

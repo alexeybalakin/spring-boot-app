@@ -1,6 +1,7 @@
 package com.ardecs.springbootapp.client;
 
 import com.ardecs.springbootapp.client.dto.DocumentDTO;
+import com.ardecs.springbootapp.client.dto.FileDTO;
 import com.ardecs.springbootapp.client.dto.UserDTO;
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.Cell;
@@ -20,6 +21,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.view.client.ListDataProvider;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +36,6 @@ public class GWTApp implements EntryPoint {
 
     private final TextBox title = new TextBox();
     private final TextBox description = new TextBox();
-
     private final DateBox date = new DateBox();
 
     private TabLayoutPanel tabLayoutPanel = new TabLayoutPanel(20, Style.Unit.PX);;
@@ -330,12 +331,14 @@ public class GWTApp implements EntryPoint {
                     public void onSuccess(UserDTO user) {
                         if (id != -1) {
                             dataProvider.getList().set(dataProvider.getList().indexOf(user), user);
+                            dataProvider.refresh();
                         } else {
                             dataProvider.getList().add(user);
                         }
-                        dialogBox.hide();
+
                     }
                 });
+                dialogBox.hide();
             }
         }));
         dcontrol.add(new Button("Отменить", new ClickHandler() {
@@ -383,16 +386,18 @@ public class GWTApp implements EntryPoint {
         final FormPanel form = new FormPanel();
         //create a file upload widget
         final FileUpload fileUpload = new FileUpload();
+        fileUpload.getElement().setAttribute("name", "file");
         //create labels
         Label selectLabel = new Label("Select a file:");
         //create upload button
         Button uploadButton = new Button("Upload File");
         //pass action to the form to point to service handling file
         //receiving operation.
-        form.setAction("/upload.jsp");
+        form.setAction("/upload");
         // set form to use the POST method, and multipart MIME encoding.
         form.setEncoding(FormPanel.ENCODING_MULTIPART);
         form.setMethod(FormPanel.METHOD_POST);
+
 
         //add a label
         panel.add(selectLabel);
@@ -420,36 +425,24 @@ public class GWTApp implements EntryPoint {
                 // When the form submission is successfully completed, this
                 //event is fired. Assuming the service returned a response
                 //of type text/html, we can get the result text here
-                Window.alert(event.getResults());
+                //Window.alert(event.getResults());
+                Window.alert("файл загружен");
             }
         });
         panel.setSpacing(10);
-
-        // Add form to the root panel.
         form.add(panel);
-
         dpanel.add(form);
 
-
-
-
-//        FileUpload upload = new FileUpload();
-//        upload.setName("uploadFormElement");
-//        dpanel.add(upload);
-//
-//        // Add a 'submit' button.
-//        dpanel.add(new Button("Submit", new ClickHandler() {
-//            public void onClick(ClickEvent event) {
-//                //form.submit();
-//            }
-//        }));
 
         HorizontalPanel dcontrol = new HorizontalPanel();
         dcontrol.add(new Button("Сохранить", new ClickHandler() {
             public void onClick(ClickEvent event) {
-                DocumentDTO newDoc = new DocumentDTO(id,  date.getValue(), title.getValue(), description.getValue(), currentUser);
+                FileDTO fileDTO = new FileDTO(-1L, fileUpload.getFilename());
+                List<FileDTO> fileList= new ArrayList<>();
+                fileList.add(fileDTO);
+                DocumentDTO newDoc = new DocumentDTO(id,  date.getValue(), title.getValue(), description.getValue(), fileList,currentUser);
 
-                docService.save(newDoc, new AsyncCallback<DocumentDTO>() {
+                docService.saveWithFile(newDoc, new AsyncCallback<DocumentDTO>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                         Window.alert("Save Document error! ");

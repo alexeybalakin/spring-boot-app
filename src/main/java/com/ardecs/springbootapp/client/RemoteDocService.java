@@ -16,4 +16,6 @@ public interface RemoteDocService extends RemoteService {
     void delete(DocumentDTO document);
 
     DocumentDTO save(DocumentDTO document);
+
+    DocumentDTO saveWithFile(DocumentDTO data);
 }

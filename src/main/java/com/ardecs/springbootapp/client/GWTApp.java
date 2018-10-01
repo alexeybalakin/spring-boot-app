@@ -48,6 +48,8 @@ public class GWTApp implements EntryPoint {
 
     private UserDTO currentUser;
 
+    private DateTimeFormat dateFormat = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_SHORT);
+
     public void onModuleLoad() {
 
         //создаем таблицу юзеров и добавляем на первую вкладку
@@ -256,7 +258,7 @@ public class GWTApp implements EntryPoint {
             }
         };
 
-        DateTimeFormat dateFormat = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_SHORT);
+
         Column<DocumentDTO, Date> dateColumn = new Column<DocumentDTO, Date>(new DateCell(dateFormat)) {
             @Override
             public Date getValue(DocumentDTO object) {
@@ -270,9 +272,21 @@ public class GWTApp implements EntryPoint {
                 return doc.getUser().getName();
             }
         };
+
+        TextColumn<DocumentDTO> fileColumn = new TextColumn<DocumentDTO>() {
+            @Override
+            public String getValue(DocumentDTO doc) {
+                if (doc.getFiles() != null ) {
+                    if(!doc.getFiles().isEmpty())
+                    return doc.getFiles().get(0).getName() ;
+                }
+                return "";
+            }
+        };
         table.addColumn(titleColumn, "Заголовок");
         table.addColumn(descriptionColumn, "Описание");
         table.addColumn(dateColumn, "Дата");
+        table.addColumn(fileColumn, "Файл");
         table.addColumn(userColumn, "Владелец");
         ListDataProvider<DocumentDTO> documentDataProvider = new ListDataProvider<>();
         documentDataProvider.addDataDisplay(table);
@@ -377,6 +391,7 @@ public class GWTApp implements EntryPoint {
         Label labelName = new Label("Дата");
         labelName.setWidth("100px");
         datePanel.add(labelName);
+        date.setFormat(new DateBox.DefaultFormat(dateFormat));
         datePanel.add(date);
         dpanel.add(datePanel);
 
@@ -387,10 +402,8 @@ public class GWTApp implements EntryPoint {
         //create a file upload widget
         final FileUpload fileUpload = new FileUpload();
         fileUpload.getElement().setAttribute("name", "file");
-        //create labels
-        Label selectLabel = new Label("Select a file:");
         //create upload button
-        Button uploadButton = new Button("Upload File");
+        Button uploadButton = new Button("Загрузить файл");
         //pass action to the form to point to service handling file
         //receiving operation.
         form.setAction("/upload");
@@ -398,9 +411,6 @@ public class GWTApp implements EntryPoint {
         form.setEncoding(FormPanel.ENCODING_MULTIPART);
         form.setMethod(FormPanel.METHOD_POST);
 
-
-        //add a label
-        panel.add(selectLabel);
         //add fileUpload widget
         panel.add(fileUpload);
         //add a button to upload the file
@@ -411,7 +421,7 @@ public class GWTApp implements EntryPoint {
                 //get the filename to be uploaded
                 String filename = fileUpload.getFilename();
                 if (filename.length() == 0) {
-                    Window.alert("No File Specified!");
+                    Window.alert("Файл не выбран!");
                 } else {
                     //submit the form
                     form.submit();
@@ -426,21 +436,20 @@ public class GWTApp implements EntryPoint {
                 //event is fired. Assuming the service returned a response
                 //of type text/html, we can get the result text here
                 //Window.alert(event.getResults());
-                Window.alert("файл загружен");
+                Window.alert("Файл загружен");
             }
         });
         panel.setSpacing(10);
         form.add(panel);
         dpanel.add(form);
 
-
         HorizontalPanel dcontrol = new HorizontalPanel();
         dcontrol.add(new Button("Сохранить", new ClickHandler() {
             public void onClick(ClickEvent event) {
-                FileDTO fileDTO = new FileDTO(-1L, fileUpload.getFilename());
                 List<FileDTO> fileList= new ArrayList<>();
-                fileList.add(fileDTO);
                 DocumentDTO newDoc = new DocumentDTO(id,  date.getValue(), title.getValue(), description.getValue(), fileList,currentUser);
+                FileDTO fileDTO = new FileDTO(-1L, fileUpload.getFilename(),newDoc);
+                fileList.add(fileDTO);
 
                 docService.saveWithFile(newDoc, new AsyncCallback<DocumentDTO>() {
                     @Override

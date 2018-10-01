@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class FileDTO implements Serializable {
     private Long id;
     private String name;
+    private DocumentDTO document;
 
     public FileDTO() {
     }
@@ -14,6 +15,11 @@ public class FileDTO implements Serializable {
         this.name = name;
     }
 
+    public FileDTO(Long id, String name, DocumentDTO document) {
+        this.id = id;
+        this.name = name;
+        this.document = document;
+    }
     public Long getId() {
         return id;
     }
@@ -28,5 +34,13 @@ public class FileDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public DocumentDTO getDocument() {
+        return document;
+    }
+
+    public void setDocument(DocumentDTO document) {
+        this.document = document;
     }
 }

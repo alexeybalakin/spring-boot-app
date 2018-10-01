@@ -14,7 +14,7 @@ public class File implements Serializable {
     @SequenceGenerator(name="FileSeq",sequenceName="FILE_SEQ")
     private Long id;
     private String name;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "doc_id")
     private Document document;
 
@@ -24,6 +24,7 @@ public class File implements Serializable {
     public File(FileDTO fileDTO){
         this.id = fileDTO.getId();
         this.name = fileDTO.getName();
+        //this.document = new Document(fileDTO.getDocument());
     }
     public Long getId() {
         return id;
@@ -39,5 +40,13 @@ public class File implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
     }
 }

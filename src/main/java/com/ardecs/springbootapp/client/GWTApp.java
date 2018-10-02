@@ -6,12 +6,15 @@ import com.ardecs.springbootapp.client.dto.UserDTO;
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.DateCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -273,16 +276,26 @@ public class GWTApp implements EntryPoint {
             }
         };
 
-        TextColumn<DocumentDTO> fileColumn = new TextColumn<DocumentDTO>() {
+        Column<DocumentDTO, SafeHtml> fileColumn = new Column<DocumentDTO, SafeHtml>(
+                new SafeHtmlCell()) {
+
             @Override
-            public String getValue(DocumentDTO doc) {
-                if (doc.getFiles() != null ) {
-                    if(!doc.getFiles().isEmpty())
-                    return doc.getFiles().get(0).getName() ;
+            public SafeHtml getValue(DocumentDTO doc) {
+                SafeHtmlBuilder sb = new SafeHtmlBuilder();
+                if (!doc.getFiles().isEmpty()) {
+                    String file =  doc.getFiles().get(0).getName();
+                    sb.appendHtmlConstant("<a href='"
+                        + "/files/"
+                        + file
+                        +"'>"
+                        + file
+                        + "</a>");
                 }
-                return "";
+                return sb.toSafeHtml();
             }
         };
+
+
         table.addColumn(titleColumn, "Заголовок");
         table.addColumn(descriptionColumn, "Описание");
         table.addColumn(dateColumn, "Дата");
@@ -349,7 +362,6 @@ public class GWTApp implements EntryPoint {
                         } else {
                             dataProvider.getList().add(user);
                         }
-
                     }
                 });
                 dialogBox.hide();
@@ -436,6 +448,7 @@ public class GWTApp implements EntryPoint {
                 //event is fired. Assuming the service returned a response
                 //of type text/html, we can get the result text here
                 //Window.alert(event.getResults());
+                event.getResults();
                 Window.alert("Файл загружен");
             }
         });
@@ -448,7 +461,7 @@ public class GWTApp implements EntryPoint {
             public void onClick(ClickEvent event) {
                 List<FileDTO> fileList= new ArrayList<>();
                 DocumentDTO newDoc = new DocumentDTO(id,  date.getValue(), title.getValue(), description.getValue(), fileList,currentUser);
-                FileDTO fileDTO = new FileDTO(-1L, fileUpload.getFilename(),newDoc);
+                FileDTO fileDTO = new FileDTO(-1L, fileUpload.getFilename().substring(fileUpload.getFilename().lastIndexOf("\\")+1),newDoc);
                 fileList.add(fileDTO);
 
                 docService.saveWithFile(newDoc, new AsyncCallback<DocumentDTO>() {

@@ -29,13 +29,10 @@ public class UserService {
     }
 
     public UserDTO save(UserDTO data) {
-        User user = new User();
-        user.setId(data.getId());
-        user.setLogin(data.getLogin());
-        user.setPassword(data.getPassword());
-        user.setName(data.getName());
+        User user = new User(data);
         repository.save(user);
         data.setId(user.getId());
+        System.out.println(" user id = " + user.getId());
         return data;
     }
 }

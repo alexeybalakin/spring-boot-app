@@ -67,4 +67,19 @@ public class UserDTO implements Serializable {
     public void setDocuments(List<DocumentDTO> documents) {
         this.documents = documents;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserDTO that = (UserDTO) o;
+
+        return id.longValue() == that.id.longValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return id.intValue();
+    }
+
 }

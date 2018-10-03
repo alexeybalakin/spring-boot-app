@@ -43,4 +43,19 @@ public class FileDTO implements Serializable {
     public void setDocument(DocumentDTO document) {
         this.document = document;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileDTO that = (FileDTO) o;
+
+        return id.longValue() == that.id.longValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return id.intValue();
+    }
 }

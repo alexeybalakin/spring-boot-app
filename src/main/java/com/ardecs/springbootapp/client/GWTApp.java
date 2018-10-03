@@ -358,7 +358,6 @@ public class GWTApp implements EntryPoint {
                     public void onSuccess(UserDTO user) {
                         if (id != -1) {
                             dataProvider.getList().set(dataProvider.getList().indexOf(user), user);
-                            dataProvider.refresh();
                         } else {
                             dataProvider.getList().add(user);
                         }
@@ -407,7 +406,7 @@ public class GWTApp implements EntryPoint {
         datePanel.add(date);
         dpanel.add(datePanel);
 
-//форма для загрузки файла
+    //форма для загрузки файла
         VerticalPanel panel = new VerticalPanel();
         //create a FormPanel
         final FormPanel form = new FormPanel();

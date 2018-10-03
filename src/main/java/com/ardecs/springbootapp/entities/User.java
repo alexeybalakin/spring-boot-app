@@ -25,23 +25,10 @@ public class User implements Serializable {
     }
 
     public User(UserDTO userDTO) {
-        this.id = userDTO.getId();
+        this.id = userDTO.getId() != -1 ? userDTO.getId() : null;
         this.login = userDTO.getLogin();
         this.password = userDTO.getPassword();
         this.name = userDTO.getName();
-    }
-
-    public User(Long id, String login, String password, String name) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.name = name;
-    }
-
-    public User(String login, String password, String name) {
-        this.login = login;
-        this.password = password;
-        this.name = name;
     }
 
     public Long getId() {

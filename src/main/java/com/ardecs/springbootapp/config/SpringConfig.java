@@ -1,4 +1,4 @@
-package com.ardecs.springbootapp;
+package com.ardecs.springbootapp.config;
 
 import org.springframework.context.annotation.Configuration;
 

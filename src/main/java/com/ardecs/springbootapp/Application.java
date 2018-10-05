@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableJpaRepositories
 @EnableTransactionManagement
-public class SpringBootAppApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootAppApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }

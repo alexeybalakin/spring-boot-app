@@ -203,7 +203,7 @@ public class GWTApp implements EntryPoint {
         Cell<UserDTO> cell = new ActionCell<>("Документы", new ActionCell.Delegate<UserDTO>() {
             @Override
             public void execute(UserDTO userDTO) {
-                   currentUser = userDTO;
+                currentUser = userDTO;
                 docService.listByUser(userDTO, new AsyncCallback<List<DocumentDTO>>() {
                     @Override
                     public void onFailure(Throwable caught) {
@@ -222,7 +222,7 @@ public class GWTApp implements EntryPoint {
             }
         });
 
-        Column<UserDTO, UserDTO>  buttonColumn = new Column<UserDTO, UserDTO>(cell) {
+        Column<UserDTO, UserDTO> buttonColumn = new Column<UserDTO, UserDTO>(cell) {
             @Override
             public UserDTO getValue(UserDTO object) {
                 return object;
@@ -232,7 +232,8 @@ public class GWTApp implements EntryPoint {
         table.addColumn(loginColumn, "Логин");
         table.addColumn(passwordColumn, "Пароль");
         table.addColumn(nameColumn, "Имя");
-        table.addColumn(buttonColumn,"Документы");
+        table.addColumn(buttonColumn, "Документы");
+
         ListDataProvider<UserDTO> dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(table);
         this.userService.list(new AsyncCallback<List<UserDTO>>() {
@@ -240,6 +241,7 @@ public class GWTApp implements EntryPoint {
             public void onFailure(Throwable throwable) {
                 Window.alert("Ошибка при получении данных из таблицы users!");
             }
+
             @Override
             public void onSuccess(List<UserDTO> people) {
                 dataProvider.getList().addAll(people);
@@ -280,13 +282,13 @@ public class GWTApp implements EntryPoint {
             public SafeHtml getValue(DocumentDTO doc) {
                 SafeHtmlBuilder sb = new SafeHtmlBuilder();
                 if (!doc.getFiles().isEmpty()) {
-                    String file =  doc.getFiles().get(0).getName();
+                    String file = doc.getFiles().get(0).getName();
                     sb.appendHtmlConstant("<a href='"
-                        + "/files/"
-                        + file
-                        +"'>"
-                        + file
-                        + "</a>");
+                            + "/files/"
+                            + file
+                            + "'>"
+                            + file
+                            + "</a>");
                 }
                 return sb.toSafeHtml();
             }
@@ -305,6 +307,7 @@ public class GWTApp implements EntryPoint {
             public void onFailure(Throwable throwable) {
                 Window.alert("Ошибка при получении данных из таблицы docs!");
             }
+
             @Override
             public void onSuccess(List<DocumentDTO> result) {
                 documentDataProvider.getList().addAll(result);
@@ -351,6 +354,7 @@ public class GWTApp implements EntryPoint {
                     public void onFailure(Throwable throwable) {
                         Window.alert("Save User error! ");
                     }
+
                     @Override
                     public void onSuccess(UserDTO user) {
                         if (id != -1) {
@@ -410,9 +414,9 @@ public class GWTApp implements EntryPoint {
         HorizontalPanel dcontrol = new HorizontalPanel();
         dcontrol.add(new Button("Сохранить", new ClickHandler() {
             public void onClick(ClickEvent event) {
-                List<FileDTO> fileList= new ArrayList<>();
-                DocumentDTO newDoc = new DocumentDTO(id,  date.getValue(), title.getValue(), description.getValue(), fileList,currentUser);
-                FileDTO fileDTO = new FileDTO(-1L, fileUpload.getFilename().substring(fileUpload.getFilename().lastIndexOf("\\")+1),newDoc);
+                List<FileDTO> fileList = new ArrayList<>();
+                DocumentDTO newDoc = new DocumentDTO(id, date.getValue(), title.getValue(), description.getValue(), fileList, currentUser);
+                FileDTO fileDTO = new FileDTO(-1L, fileUpload.getFilename().substring(fileUpload.getFilename().lastIndexOf("\\") + 1), newDoc);
                 fileList.add(fileDTO);
 
                 docService.saveWithFile(newDoc, new AsyncCallback<DocumentDTO>() {
@@ -420,6 +424,7 @@ public class GWTApp implements EntryPoint {
                     public void onFailure(Throwable throwable) {
                         Window.alert("Save Document error! ");
                     }
+
                     @Override
                     public void onSuccess(DocumentDTO documentDTO) {
                         if (id != -1) {

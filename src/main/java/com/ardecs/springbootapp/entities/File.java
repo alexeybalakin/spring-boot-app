@@ -22,9 +22,8 @@ public class File implements Serializable {
     }
 
     public File(FileDTO fileDTO){
-        this.id = fileDTO.getId();
+        this.id = fileDTO.getId() != -1 ? fileDTO.getId() : null;
         this.name = fileDTO.getName();
-        //this.document = new Document(fileDTO.getDocument());
     }
     public Long getId() {
         return id;

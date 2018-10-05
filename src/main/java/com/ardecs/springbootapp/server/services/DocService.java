@@ -7,6 +7,7 @@ import com.ardecs.springbootapp.entities.Document;
 import com.ardecs.springbootapp.entities.File;
 import com.ardecs.springbootapp.entities.User;
 import com.ardecs.springbootapp.repositories.DocumentRepository;
+import com.ardecs.springbootapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,8 @@ public class DocService {
 
     @Autowired
     private DocumentRepository repository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<DocumentDTO> list() {
@@ -60,6 +63,7 @@ public class DocService {
 
     public DocumentDTO saveWithFile(DocumentDTO data) {
         Document document = new Document(data);
+        document.setUser(userRepository.getOne(data.getUser().getId()));
         repository.save(document);
         data.setId(document.getId());
         return data;

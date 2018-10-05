@@ -33,16 +33,17 @@ public class Document implements Serializable {
     }
 
     public Document(DocumentDTO documentDTO) {
-        this.id = documentDTO.getId();
+        this.id = documentDTO.getId() != -1 ? documentDTO.getId() : null;
         this.data = documentDTO.getData();
         this.title = documentDTO.getTitle();
         this.description = documentDTO.getDescription();
-        this.user = new User(documentDTO.getUser());
         List<FileDTO> fileDTOS = documentDTO.getFiles();
         if (fileDTOS !=null){
             List<File> files = new ArrayList<>();
             for(FileDTO fileDTO : fileDTOS){
-                files.add(new File(fileDTO));
+                File file = new File(fileDTO);
+                file.setDocument(this);
+                files.add(file);
             }
             this.files = files;
         }

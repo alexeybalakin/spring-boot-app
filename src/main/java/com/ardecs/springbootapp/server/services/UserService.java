@@ -32,7 +32,6 @@ public class UserService {
         User user = new User(data);
         repository.save(user);
         data.setId(user.getId());
-        System.out.println(" user id = " + user.getId());
         return data;
     }
 }

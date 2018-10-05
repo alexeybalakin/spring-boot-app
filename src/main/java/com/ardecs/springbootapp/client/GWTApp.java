@@ -36,29 +36,35 @@ public class GWTApp implements EntryPoint {
     private final TextBox login = new TextBox();
     private final TextBox password = new TextBox();
     private final TextBox name = new TextBox();
-
     private final TextBox title = new TextBox();
     private final TextBox description = new TextBox();
     private final DateBox date = new DateBox();
-
-    private TabLayoutPanel tabLayoutPanel = new TabLayoutPanel(20, Style.Unit.PX);;
+    private FileUpload fileUpload = new FileUpload();
+    private HorizontalPanel docControl = new HorizontalPanel();
+    private TabLayoutPanel tabLayoutPanel = new TabLayoutPanel(20, Style.Unit.PX);
 
     private Long id = -1L;
 
-    private CellTable<DocumentDTO> docTable = new CellTable<>();
     private ListDataProvider<DocumentDTO> dataDocProvider;
-    private HorizontalPanel docControl;
 
     private UserDTO currentUser;
 
     private DateTimeFormat dateFormat = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_SHORT);
 
     public void onModuleLoad() {
+        tabLayoutPanel.add(getUsersTabContent(), "Пользователи");
+        tabLayoutPanel.add(getDocsTabContent(), "Документы");
+        tabLayoutPanel.setHeight("420px");
+        tabLayoutPanel.selectTab(0);
+        RootPanel.get().add(tabLayoutPanel);
+    }
 
-        //создаем таблицу юзеров и добавляем на первую вкладку
+    //создаем таблицу юзеров и панельку с кнопками управления
+    private VerticalPanel getUsersTabContent() {
         CellTable<UserDTO> userTable = new CellTable<>();
         ListDataProvider<UserDTO> dataProvider = createUserTable(userTable);
         DialogBox userDialog = editUserDialog(dataProvider);
+
         Button add = new Button("Добавить", new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -106,29 +112,20 @@ public class GWTApp implements EntryPoint {
         userControl.add(add);
         userControl.add(edit);
         userControl.add(delete);
-        VerticalPanel panel = new VerticalPanel();
-        panel.add(userControl);
-        panel.add(userTable);
-        tabLayoutPanel.add(panel, "Пользователи");
 
-        //создаем таблицу документов и добавляем на вторую вкладку
-        dataDocProvider = createDocTable(docTable);
-
-        docControl = createDocControlPanel(docTable, dataDocProvider);
-        docControl.setVisible(false);
-
-        VerticalPanel docPanel = new VerticalPanel();
-        docPanel.add(docControl);
-        docPanel.add(docTable);
-        tabLayoutPanel.add(docPanel, "Документы");
-
-        tabLayoutPanel.setHeight("420px");
-        tabLayoutPanel.selectTab(0);
-        RootPanel.get().add(tabLayoutPanel);
+        VerticalPanel userPanel = new VerticalPanel();
+        userPanel.add(userControl);
+        userPanel.add(userTable);
+        return userPanel;
     }
 
-    private HorizontalPanel createDocControlPanel(CellTable<DocumentDTO> docTable, ListDataProvider<DocumentDTO> dataDocProvider) {
+    //создаем таблицу документов и панельку с кнопками управления
+    private VerticalPanel getDocsTabContent() {
+
+        CellTable<DocumentDTO> docTable = new CellTable<>();
+        dataDocProvider = createDocTable(docTable);;
         DialogBox docDialog = editDocDialog(dataDocProvider);
+
         Button addDoc = new Button("Добавить", new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -172,11 +169,16 @@ public class GWTApp implements EntryPoint {
                 docDialog.show();
             }
         });
-        HorizontalPanel docControl = new HorizontalPanel();
+
         docControl.add(addDoc);
         docControl.add(editDoc);
         docControl.add(deleteDoc);
-        return docControl;
+        docControl.setVisible(false);
+
+        VerticalPanel docPanel = new VerticalPanel();
+        docPanel.add(docControl);
+        docPanel.add(docTable);
+        return docPanel;
     }
 
     private ListDataProvider<UserDTO> createUserTable(CellTable<UserDTO> table) {
@@ -198,7 +200,6 @@ public class GWTApp implements EntryPoint {
                 return user.getName();
             }
         };
-
         Cell<UserDTO> cell = new ActionCell<>("Документы", new ActionCell.Delegate<UserDTO>() {
             @Override
             public void execute(UserDTO userDTO) {
@@ -260,22 +261,18 @@ public class GWTApp implements EntryPoint {
                 return doc.getDescription();
             }
         };
-
-
         Column<DocumentDTO, Date> dateColumn = new Column<DocumentDTO, Date>(new DateCell(dateFormat)) {
             @Override
             public Date getValue(DocumentDTO object) {
                 return object.getData();
             }
         };
-
         TextColumn<DocumentDTO> userColumn = new TextColumn<DocumentDTO>() {
             @Override
             public String getValue(DocumentDTO doc) {
                 return doc.getUser().getName();
             }
         };
-
         Column<DocumentDTO, SafeHtml> fileColumn = new Column<DocumentDTO, SafeHtml>(
                 new SafeHtmlCell()) {
 
@@ -295,12 +292,12 @@ public class GWTApp implements EntryPoint {
             }
         };
 
-
         table.addColumn(titleColumn, "Заголовок");
         table.addColumn(descriptionColumn, "Описание");
         table.addColumn(dateColumn, "Дата");
         table.addColumn(fileColumn, "Файл");
         table.addColumn(userColumn, "Владелец");
+
         ListDataProvider<DocumentDTO> documentDataProvider = new ListDataProvider<>();
         documentDataProvider.addDataDisplay(table);
         this.docService.list(new AsyncCallback<List<DocumentDTO>>() {
@@ -406,53 +403,8 @@ public class GWTApp implements EntryPoint {
         datePanel.add(date);
         dpanel.add(datePanel);
 
-    //форма для загрузки файла
-        VerticalPanel panel = new VerticalPanel();
-        //create a FormPanel
-        final FormPanel form = new FormPanel();
-        //create a file upload widget
-        final FileUpload fileUpload = new FileUpload();
-        fileUpload.getElement().setAttribute("name", "file");
-        //create upload button
-        Button uploadButton = new Button("Загрузить файл");
-        //pass action to the form to point to service handling file
-        //receiving operation.
-        form.setAction("/upload");
-        // set form to use the POST method, and multipart MIME encoding.
-        form.setEncoding(FormPanel.ENCODING_MULTIPART);
-        form.setMethod(FormPanel.METHOD_POST);
-
-        //add fileUpload widget
-        panel.add(fileUpload);
-        //add a button to upload the file
-        panel.add(uploadButton);
-        uploadButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                //get the filename to be uploaded
-                String filename = fileUpload.getFilename();
-                if (filename.length() == 0) {
-                    Window.alert("Файл не выбран!");
-                } else {
-                    //submit the form
-                    form.submit();
-                }
-            }
-        });
-
-        form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-            @Override
-            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                // When the form submission is successfully completed, this
-                //event is fired. Assuming the service returned a response
-                //of type text/html, we can get the result text here
-                //Window.alert(event.getResults());
-                event.getResults();
-                Window.alert("Файл загружен");
-            }
-        });
-        panel.setSpacing(10);
-        form.add(panel);
+        //форма для загрузки файла
+        final FormPanel form = createFileUploadForm();
         dpanel.add(form);
 
         HorizontalPanel dcontrol = new HorizontalPanel();
@@ -489,5 +441,45 @@ public class GWTApp implements EntryPoint {
         dpanel.add(dcontrol);
         dialogBox.setWidget(dpanel);
         return dialogBox;
+    }
+
+    private FormPanel createFileUploadForm() {
+        VerticalPanel panel = new VerticalPanel();
+        final FormPanel form = new FormPanel();
+        fileUpload = new FileUpload();
+        fileUpload.getElement().setAttribute("name", "file");
+        Button uploadButton = new Button("Загрузить файл");
+        //pass action to the form to point to service handling file receiving operation.
+        form.setAction("/upload");
+        // set form to use the POST method, and multipart MIME encoding.
+        form.setEncoding(FormPanel.ENCODING_MULTIPART);
+        form.setMethod(FormPanel.METHOD_POST);
+        panel.add(fileUpload);
+        panel.add(uploadButton);
+        uploadButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                String filename = fileUpload.getFilename();
+                if (filename.length() == 0) {
+                    Window.alert("Файл не выбран!");
+                } else {
+                    form.submit();
+                }
+            }
+        });
+
+        form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+            @Override
+            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
+                // When the form submission is successfully completed, this
+                //event is fired. Assuming the service returned a response
+                //of type text/html, we can get the result text here
+                //Window.alert(event.getResults());
+                Window.alert("Файл загружен");
+            }
+        });
+        panel.setSpacing(10);
+        form.add(panel);
+        return form;
     }
 }

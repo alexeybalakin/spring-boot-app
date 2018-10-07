@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public void delete(UserDTO user) {
-        repository.delete(user.getId());
+        repository.deleteById(user.getId());
     }
 
     public UserDTO save(UserDTO data) {

@@ -46,7 +46,7 @@ public class DocService {
     }
 
     public void delete(DocumentDTO document) {
-        repository.delete(document.getId());
+        repository.deleteById(document.getId());
     }
 
     public DocumentDTO save(DocumentDTO data) {

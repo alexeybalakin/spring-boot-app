@@ -1,4 +1,4 @@
-package com.ardecs.springbootapp;
+package com.ardecs.springbootapp.config;
 
 import com.ardecs.springbootapp.server.services.remote.RemoteDocServiceImpl;
 import com.ardecs.springbootapp.server.services.remote.RemoteUserServiceImpl;
